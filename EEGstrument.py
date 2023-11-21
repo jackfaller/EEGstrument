@@ -9,26 +9,26 @@ Created on Wed Nov  8 15:45:49 2023
 # *****NOTE THE NAME MUST CHANGE!*****
 
 
-# #import UnicornPy
-# import neurolThesis
-# from neurolThesis import streams
-# from neurolThesis.connect_device import get_lsl_EEG_inlets
-# from neurolThesis.BCI import generic_BCI, automl_BCI
-# from neurolThesis import BCI_tools
-# from neurolThesis.models import classification_tools
-# from sys import exit
-# from pylsl import StreamInlet, resolve_stream
+#import UnicornPy
+import neurolThesis
+from neurolThesis import streams
+from neurolThesis.connect_device import get_lsl_EEG_inlets
+from neurolThesis.BCI import generic_BCI, automl_BCI
+from neurolThesis import BCI_tools
+from neurolThesis.models import classification_tools
+from sys import exit
+from pylsl import StreamInlet, resolve_stream
 
-# def clf(clf_input, clb_info):
+def clf(clf_input, clb_info):
 
-#     #clf_input = clf_input[:clb_info.shape[0]]
+    #clf_input = clf_input[:clb_info.shape[0]]
 
-#     note = 0
-#     for i in range(clb_info.shape[0]):
-#         if(clf_input > clb_info[i]):
-#             note += 1
+    note = 0
+    for i in range(clb_info.shape[0]):
+        if(clf_input > clb_info[i]):
+            note += 1
  
-#     return note
+    return note
 
 # #git test
 
@@ -129,26 +129,26 @@ root.geometry(f"{window_width}x{window_height}")
 
 
 
-# streams1 = resolve_stream("name='Unicorn'")
-# inlet = StreamInlet(streams1[0])
-# stream = streams.lsl_stream(inlet, buffer_length=1024)
+streams1 = resolve_stream("name='Unicorn'")
+inlet = StreamInlet(streams1[0])
+stream = streams.lsl_stream(inlet, buffer_length=1024)
 
-# clb = lambda stream:  BCI_tools.band_power_calibrator(stream, ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 
-#                                                                'EEG 5', 'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
-#                                                         bands=['alpha_low','alpha_high'],
-#                                                         percentile=5, recording_length=10, epoch_len=1, inter_window_interval=0.25)
-
-
-# gen_tfrm = lambda buffer, clb_info: BCI_tools.band_power_transformer(buffer, clb_info, 
-#                                                                      ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 'EEG 5', 
-#                                                                       'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
-#                                                         bands=['alpha_low','alpha_high'],
-#                                                         epoch_len=1)
+clb = lambda stream:  BCI_tools.band_power_calibrator(stream, ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 
+                                                               'EEG 5', 'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
+                                                        bands=['alpha_low','alpha_high'],
+                                                        percentile=5, recording_length=10, epoch_len=1, inter_window_interval=0.25)
 
 
-# BCI = generic_BCI(clf, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
-# BCI.calibrate(stream)
-# BCI.run(stream)
+gen_tfrm = lambda buffer, clb_info: BCI_tools.band_power_transformer(buffer, clb_info, 
+                                                                     ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 'EEG 5', 
+                                                                      'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
+                                                        bands=['alpha_low','alpha_high'],
+                                                        epoch_len=1)
+
+
+BCI = generic_BCI(clf, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
+BCI.calibrate(stream)
+BCI.run(stream)
 
 
 # Initialize the first call to start the process
