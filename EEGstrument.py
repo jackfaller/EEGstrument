@@ -8,6 +8,7 @@ Created on Wed Nov  8 15:45:49 2023
 
 # *****NOTE THE NAME MUST CHANGE!*****
 
+#set git
 
 #import UnicornPy
 import neurolThesis
