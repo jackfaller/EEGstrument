@@ -90,8 +90,8 @@ root.title("Random Box Selector")
 width = 100
 height = 100
 
-colors = ["red", "green", "blue", "black", "orange", "purple", "pink", "cyan"]
-letters = ["A", "B", "C", "D", "E", "F", "G", "H"]
+colors = ["red", "green", "blue", "SeaGreen3", "orange", "purple", "pink", "cyan"]
+letters = ["A7", "B", "C", "D", "E", "F", "G", "A8"]
 
 # Create and place the colored boxes with labels
 boxes = {}
@@ -129,26 +129,26 @@ root.geometry(f"{window_width}x{window_height}")
 
 
 
-streams1 = resolve_stream("name='Unicorn'")
-inlet = StreamInlet(streams1[0])
-stream = streams.lsl_stream(inlet, buffer_length=1024)
+# streams1 = resolve_stream("name='Unicorn'")
+# inlet = StreamInlet(streams1[0])
+# stream = streams.lsl_stream(inlet, buffer_length=1024)
 
-clb = lambda stream:  BCI_tools.band_power_calibrator(stream, ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 
-                                                               'EEG 5', 'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
-                                                        bands=['alpha_low','alpha_high'],
-                                                        percentile=5, recording_length=10, epoch_len=1, inter_window_interval=0.25)
-
-
-gen_tfrm = lambda buffer, clb_info: BCI_tools.band_power_transformer(buffer, clb_info, 
-                                                                     ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 'EEG 5', 
-                                                                      'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
-                                                        bands=['alpha_low','alpha_high'],
-                                                        epoch_len=1)
+# clb = lambda stream:  BCI_tools.band_power_calibrator(stream, ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 
+#                                                                'EEG 5', 'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
+#                                                         bands=['alpha_low','alpha_high'],
+#                                                         percentile=5, recording_length=10, epoch_len=1, inter_window_interval=0.25)
 
 
-BCI = generic_BCI(clf, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
-BCI.calibrate(stream)
-BCI.run(stream)
+# gen_tfrm = lambda buffer, clb_info: BCI_tools.band_power_transformer(buffer, clb_info, 
+#                                                                      ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 'EEG 5', 
+#                                                                       'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
+#                                                         bands=['alpha_low','alpha_high'],
+#                                                         epoch_len=1)
+
+
+# BCI = generic_BCI(clf, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
+# BCI.calibrate(stream)
+# BCI.run(stream)
 
 
 # Initialize the first call to start the process
