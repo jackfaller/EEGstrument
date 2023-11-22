@@ -29,6 +29,10 @@ def get_channels(signal, channels, device=None):
             ch_ind_muse = {'TP9': 0, 'AF7': 1, 'AF8': 2, 'TP10': 3}
             return_signal = np.array([np.array(signal)[:, ch_ind_muse[ch]]
                                     for ch in channels]).T
+        elif device == 'unicorn':
+            ch_ind_muse = {'EEG 1': 0, 'EEG 2': 1, 'EEG 3': 2, 'EEG 4': 3,'EEG 5': 4, 'EEG 6': 5, 'EEG 7': 6, 'EEG 8': 7}
+            return_signal = np.array([np.array(signal)[:, ch_ind_muse[ch]] for ch in channels]).T
+           
         else:
             raise ValueError(
                 'Given device is not supported. '
