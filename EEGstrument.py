@@ -22,6 +22,7 @@ import numpy as np
 import threading
 import soundcard as sc
 import wave
+import time
 
 #import UnicornPy
 import neurolThesis
@@ -45,9 +46,12 @@ audio_files = {
     "G": r"Notes\notes_G.wav",
     "A8": r"Notes\notes_Gs.wav"
 }
+stop_thread = False
+
 def play_audio(file_path):
     """Function to play audio from a given file path."""
     global current_speaker
+    global stop_thread
     speaker = sc.default_speaker()
     with wave.open(file_path, 'rb') as wf:
         sample_rate = wf.getframerate()
@@ -57,16 +61,21 @@ def play_audio(file_path):
         audio_data = np.frombuffer(audio_data, dtype=np.int16)
         audio_data = audio_data.reshape(-1, num_channels)
     current_speaker = speaker
+    #while not stop_thread:
     speaker.play(audio_data/1000, samplerate=sample_rate)
+        #time.sleep(1)
+    #stop_thread = False
 
 def stop_audio():
     """Function to stop currently playing audio."""
     global current_speaker
-    if current_speaker:
+    global stop_thread
+    #stop_thread = True
+    #speaker = sc.default_speaker()
         # Play a short duration of silence
-        silent_audio = np.zeros((44100, 2), dtype=np.float32)  # 1 second of silence
-        current_speaker.play(silent_audio, samplerate=44100)
-        current_speaker = None
+    #silent_audio = np.zeros((44100, 2), dtype=np.float32)  # 1 second of silence
+    #speaker.play(silent_audio, samplerate=44100)
+    #current_speaker = None
 
 current_speaker = None
 
@@ -228,7 +237,7 @@ move_button = tk.Button(button_frame, text="Move Box", command=move_box)
 move_button.pack(side=tk.LEFT, padx=10)
 
 # Create buttons for calibration and exit
-start_button = tk.Button(button_frame, text="Start BCI and Calibration", command=start_bci_and_calibration)
+start_button = tk.Button(button_frame, text="Start Calibration", command=start_bci_and_calibration)
 start_button.pack(side=tk.LEFT, padx=10)
 
 exit_button = tk.Button(button_frame, text="Exit", command=exit_application)
@@ -286,7 +295,7 @@ clb = lambda stream:  BCI_tools.band_power_calibrator(stream, ['EEG 1', 'EEG 2',
 
 
 gen_tfrm = lambda buffer, clb_info: BCI_tools.band_power_transformer(buffer, 250, bands=['alpha_low','alpha_high'])
-BCI = generic_BCI(clf2, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
+BCI = generic_BCI(clf, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
 
 def run_bci():
     BCI.calibrate(stream)
