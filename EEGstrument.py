@@ -35,7 +35,7 @@ from sys import exit
 from pylsl import StreamInlet, resolve_stream
 import numpy as np
 
-# Assuming you have a dictionary of audio files corresponding to each box
+# dictionary of audio files corresponding to each box
 audio_files = {
     "A7": r"Notes\notes_A.wav",
     "B": r"Notes\notes_B.wav",
@@ -155,7 +155,7 @@ def raise_box(letter):
     
     # Highlight the selected box
     selected_box = boxes[letter]
-    selected_box.config(highlightbackground="black", highlightthickness=3)
+    selected_box.config(highlightbackground="black", highlightthickness=10)
     current_highlighted = letter
 
 def generate_letter1():
@@ -216,7 +216,7 @@ root.title("Random Box Selector")
 width = 100
 height = 100
 
-colors = ["red", "green", "blue", "SeaGreen3", "orange", "purple", "pink", "cyan"]
+colors = ["red", "orange","green", "SeaGreen3", "cyan", "blue",  "purple", "pink"]
 letters = ["A7", "B", "C", "D", "E", "F", "G", "A8"]
 
 
@@ -228,8 +228,8 @@ boxes = {}
 box_positions = {}  # Track the position of each box
 
 # Create a frame for buttons
-button_frame = tk.Frame(root)
-button_frame.grid(row=1, columnspan=8)
+button_frame = tk.Frame(root, pady= 30)
+button_frame.grid(row=4, columnspan=8)
 
 
 # Create the 'Move' button inside the button frame
@@ -259,7 +259,7 @@ for i, (color, letter) in enumerate(zip(colors, letters)):
 
 # Adjust window size
 window_width = width * len(colors)
-window_height = height + 100  # Extra space for buttons
+window_height = height + 300  # Extra space for buttons
 root.geometry(f"{window_width}x{window_height}")
 
 
