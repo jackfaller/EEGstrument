@@ -295,7 +295,7 @@ clb = lambda stream:  BCI_tools.band_power_calibrator(stream, ['EEG 1', 'EEG 2',
 
 
 gen_tfrm = lambda buffer, clb_info: BCI_tools.band_power_transformer(buffer, 250, bands=['alpha_low','alpha_high'])
-BCI = generic_BCI(clf, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
+BCI = generic_BCI(clf2, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
 
 def run_bci():
     BCI.calibrate(stream)

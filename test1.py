@@ -31,16 +31,16 @@ def clf(clf_input, clb_info):
 
 
 def clf2(clf_input, clb_info):
-    #print("clf input" , clf_input)
+    print("clf input" , clf_input)
     clf_input = clf_input[0:2,:clb_info.shape[0]]
     clb_info = clb_info[0:1,:clb_info.shape[0]]
     #print('clb_info.shape[0]', clb_info.shape[0])
-    #print("clf input" , clf_input)
+    print("clf input" , clf_input)
     #print('clb_info', clb_info)
     
     # Extracting the 8th elements from clf_input
     clf_8th_elements = clf_input[:, 7]
-
+    print("8th", clf_8th_elements)
     # Reshaping clb_info for comparison
     clb_info_reshaped = clb_info.reshape(clf_input.shape)
 
