@@ -27,7 +27,7 @@ def clf(clf_input, clb_info):
     result = np.clip(greater_count // 2, 0, 7)
 
  
-    return result
+    return clf_input
 
 
 def clf2(clf_input, clb_info):
@@ -77,6 +77,6 @@ gen_tfrm = lambda buffer, clb_info: BCI_tools.band_power_transformer(buffer, 250
 
 
 
-BCI = generic_BCI(clf2, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
+BCI = generic_BCI(clf, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
 BCI.calibrate(stream)
 BCI.run(stream)
