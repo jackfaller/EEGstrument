@@ -1,5 +1,8 @@
+<<<<<<< Updated upstream
 
 #import UnicornPy
+=======
+>>>>>>> Stashed changes
 import neurolThesis
 from neurolThesis import streams
 from neurolThesis.connect_device import get_lsl_EEG_inlets
@@ -13,6 +16,7 @@ import threading
 import soundcard as sc
 import wave
 import time
+<<<<<<< Updated upstream
 
 #import UnicornPy
 import neurolThesis
@@ -76,21 +80,48 @@ def clf2(clf_input, clb_info):
 
 def generate_letter(note):
     print(note)
+=======
+S
+
+#Test all frequency bands and/or segments of frequency bands
+#Record the range of power intensity generated over 30 seconds
+#plot these intensities
+#find which band has the greatest range of intensities (easiest to be modulated)
+# Method 1: use neurol to measure power intensity for each band
+
+#eegsynth revisit
+
+#pyaudio
+>>>>>>> Stashed changes
 
 
 streams1 = resolve_stream("name='Unicorn'")
 inlet = StreamInlet(streams1[0])
 stream = streams.lsl_stream(inlet, buffer_length=1024)
 
+<<<<<<< Updated upstream
 clb = lambda stream:  BCI_tools.band_power_calibrator(stream, ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 'EEG 5', 'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
                                                         bands=['alpha_low','alpha_high'],
+=======
+clb = lambda stream:  BCI_tools.band_power_calibrator(stream, ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 
+                                                               'EEG 5', 'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
+                                                        bands=['theta', 'alpha_low','alpha_high', 'beta'],
+>>>>>>> Stashed changes
                                                         percentile=5, recording_length=10, epoch_len=1, inter_window_interval=0.25)
 
 
 gen_tfrm = lambda buffer, clb_info: BCI_tools.band_power_transformer(buffer, 250, bands=['alpha_low','alpha_high'])
+<<<<<<< Updated upstream
 BCI = generic_BCI(clf2, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
 
 BCI.calibrate(stream)
 BCI.run(stream)
 
 #'EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 'EEG 5', 'EEG 6', 'EEG 7',
+=======
+BCI = generic_BCI(clf, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
+
+def run_bci():
+    BCI.calibrate(stream)
+    BCI.run(stream)
+>>>>>>> Stashed changes
