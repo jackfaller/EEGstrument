@@ -134,7 +134,7 @@ def clf3(clf_input, clb_info):
 
     greater_count = np.sum(np.sum(clf_input > clb_info[:,:,:]))
 
-    return 0
+    return greater_count
     
 
 

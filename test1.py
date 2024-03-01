@@ -10,7 +10,9 @@ from pylsl import StreamInlet, resolve_stream
 import numpy as np
 
 def clf(clf_input, clb_info):
-    #print("clf input" , clf_input)
+    print("clf input" , clf_input)
+    print('clb_info', clb_info)
+    return 0
     clf_input = clf_input[0:2,:clb_info.shape[0]]
     clb_info = clb_info[0:1,:clb_info.shape[0]]
     #print('clb_info.shape[0]', clb_info.shape[0])
@@ -69,14 +71,14 @@ stream = streams.lsl_stream(inlet, buffer_length=1024)
 
 clb = lambda stream:  BCI_tools.band_power_calibrator(stream, ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 
                                                                'EEG 5', 'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
-                                                        bands=['alpha_low','alpha_high'],
+                                                        bands=['theta'],
                                                         percentile=5, recording_length=10, epoch_len=1, inter_window_interval=0.25)
 
 
-gen_tfrm = lambda buffer, clb_info: BCI_tools.band_power_transformer(buffer, 250, bands=['alpha_low','alpha_high'])
+gen_tfrm = lambda buffer, clb_info: BCI_tools.band_power_transformer(buffer, 250, bands=['theta'])
 
 
 
-BCI = generic_BCI(clf, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
+BCI = generic_BCI(clf , transformer=gen_tfrm, action=generate_letter, calibrator=clb)
 BCI.calibrate(stream)
 BCI.run(stream)
