@@ -11,6 +11,36 @@ Created on Tue Mar  5 12:55:47 2024
 
 To Do:
     - Add option to switch the keys
+    - Add all necessary wav files
     - slow down processes to make more efficient
     - Adjust it to just one electrode
+    - Make the space bar the play Note
+    - Adjust calibration procedure
+    - Make tables for Plots
+    - Plots:
+        - Accuracy vs Power Band
+        - Accuracy of All Electodes vs. Single Electrode
+        - General Accuracy for Best Band(s)
+        - Accuracy by Note
+        - Chord Accuracy
+        - Accuracy vs. Training Time
+    - Quantitative Results:
+        - Latency
+        - Runtime
+    - Testing procedure
     
+    Optional: 
+    - Make a C–G–Am–F Chord Progression option
+    
+    
+Meeting 3/9:
+    - Discussion Points:
+        - Progress:
+            - Classifiers for Single, Double, Triple, and One Electrode Completed
+            - Debugged
+            - Select keys
+            - Chord Option
+        - Previous experiment's testing procedure (use or no)
+        - Hackathon
+        
+        

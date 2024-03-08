@@ -7,7 +7,7 @@ Created on Wed Nov  8 15:45:49 2023
 """
 
 # *****NOTE THE NAME MUST CHANGE!*****
-
+#%% IMPORTS
 
 #import UnicornPy
 import neurolThesis
@@ -23,17 +23,12 @@ import threading
 import soundcard as sc
 import wave
 import time
+import tkinter as tk
+from tkinter import ttk  # For the ComboBox
+import random
 
-#import UnicornPy
-import neurolThesis
-from neurolThesis import streams
-from neurolThesis.connect_device import get_lsl_EEG_inlets
-from neurolThesis.BCI import generic_BCI, automl_BCI
-from neurolThesis import BCI_tools
-from neurolThesis.models import classification_tools
-from sys import exit
-from pylsl import StreamInlet, resolve_stream
-import numpy as np
+
+#%% AUDIO
 
 # dictionary of audio files corresponding to each box
 audio_files = {
@@ -79,19 +74,18 @@ def stop_audio():
 
 current_speaker = None
 
+#%% CLASSIFIERS
+
 def clf(clf_input, clb_info):
-    print("clf input" , clf_input)
-    print('clb_info', clb_info)
+    #print("clf input" , clf_input)
     clf_input = clf_input[0:2,:clb_info.shape[0]]
     clb_info = clb_info[0:1,:clb_info.shape[0]]
     #print('clb_info.shape[0]', clb_info.shape[0])
-    print("clf input" , clf_input)
-    print('clb_info', clb_info)
+    #print("clf input" , clf_input)
+    #print('clb_info', clb_info)
     
     # Reshaping clb_info to match the shape of clf_input
     clb_info_reshaped = clb_info.reshape(clf_input.shape)
-
-    print("clb infor", clb_info_reshaped)
 
     # Element-wise comparison and summing
     greater_count = np.sum(clf_input > clb_info_reshaped)
@@ -127,21 +121,7 @@ def clf2(clf_input, clb_info):
  
     return result
 
-def clf3(clf_input, clb_info):
-    print("clf input" , clf_input)
-    print('clb_info', clb_info)
-    clf_input = clf_input[0:2,:clb_info.shape[0]]
-
-    greater_count = np.sum(np.sum(clf_input > clb_info[:,:,:]))
-
-    return greater_count
-    
-
-
-
-
-
-
+#%% TKINTER GUI FUNCTIONS
 
 
 def generate_letter(note):
@@ -150,20 +130,14 @@ def generate_letter(note):
         letters = list(boxes.keys())
         selected_letter = letters[note]
         raise_box(selected_letter)
-    # if all(position == 'normal' for position in box_positions.values()):
-    #     letters = list(boxes.keys())
-    #     selected_letter = letters[note]
-    #     raise_box(selected_letter)
     #root.after(2000, generate_letter)
 
-
-
-
-
-
-import tkinter as tk
-
-import random
+def generate_letter1():
+    if all(position == 'normal' for position in box_positions.values()):
+        letters = list(boxes.keys())
+        selected_letter = random.choice(letters)
+        raise_box(selected_letter)
+    root.after(2000, generate_letter)
 
 def raise_box(letter):
     global current_highlighted
@@ -176,30 +150,6 @@ def raise_box(letter):
     selected_box = boxes[letter]
     selected_box.config(highlightbackground="black", highlightthickness=10)
     current_highlighted = letter
-
-def generate_letter1():
-    if all(position == 'normal' for position in box_positions.values()):
-        letters = list(boxes.keys())
-        selected_letter = random.choice(letters)
-        raise_box(selected_letter)
-    root.after(2000, generate_letter)
-
-# def generate_letter(note):
-#     if all(position == 'normal' for position in box_positions.values()):
-#         letters = list(boxes.keys())
-#         selected_letter = letters[note]
-#         raise_box(selected_letter)
-#     #root.after(2000, generate_letter)
-
-def exit_application():
-    """Function to exit the application."""
-    root.quit()
-    root.destroy()  # Close the Tkinter window
-    # Optionally, add any clean-up code here
-    exit()  # Terminate the Python program
-
-
-
 
 def move_box():
     global current_speaker
@@ -220,6 +170,16 @@ def move_box():
             box_positions[current_highlighted] = 'normal'
             stop_audio()
 
+def exit_application():
+    """Function to exit the application."""
+    root.quit()
+    root.destroy()  # Close the Tkinter window
+    # Optionally, add any clean-up code here
+    exit()  # Terminate the Python program
+
+
+
+
 def start_bci_and_calibration():
     """Function to start BCI and calibration and disable the start button."""
     # Disable the start button to prevent further clicks
@@ -227,17 +187,74 @@ def start_bci_and_calibration():
     # Start the BCI and calibration in a new thread
     threading.Thread(target=run_bci, daemon=True).start()
 
-# Create the main window
-root = tk.Tk()
-root.title("Random Box Selector")
+#%% GSPLASH ROOT
 
+# Create the splash window
+
+def on_start():
+    selected_key = key_dropdown.get()  # Get the selected musical key from the dropdown
+    print(f"Selected Musical Key: {selected_key}") 
+    # Destroy the splash screen
+    splash_root.destroy()
+    # Initialize the main application window
+    main_app(selected_key)
+
+# Create the main window
+
+
+# Create the splash screen window
+splash_root = tk.Tk()
+splash_root.title("Splash Screen")
+
+# Optionally, you can set the size of the splash screen window
+splash_root.geometry("300x150")
+musical_keys = ["C",  "D",  "G",  "A"]
+key_dropdown = ttk.Combobox(splash_root, values=musical_keys, state="readonly")
+key_dropdown.pack(pady=10)
+key_dropdown.set("Choose a Key")  # Default/placeholder text
+
+# Add a 'Start' button to the splash screen
+start_buttonSplash = tk.Button(splash_root, text="Start", command=on_start)
+start_buttonSplash.pack(pady=20)
+
+
+
+#%% MAIN ROOT
+
+def main_app(selected_key):
+    # Default letters array if the selected key is not found
+    default_letters = ["A7", "B", "C", "D", "E", "F", "G", "A8"]
+    letters = key_to_letters.get(selected_key, default_letters)
+
+    
+    for i, (color, letter) in enumerate(zip(colors, letters)):
+        frame = tk.Frame(root, bg=color, width=width, height=height, highlightbackground="white", highlightthickness=1)
+        frame.grid(row=0, column=i, pady=(0, 20))  # Default padding
+        frame.pack_propagate(False)
+        label = tk.Label(frame, text=letter, bg=color)
+        label.pack(expand=True, fill='both')
+        boxes[letter] = frame
+        box_positions[letter] = 'normal'
+        
+    
+    # Start the main event loop
+    root.mainloop()
+
+root = tk.Tk()
+root.title("EEGstrument")
+# Add widgets to the main application window
 # Box dimensions
 width = 100
 height = 100
 
 colors = ["red", "orange","green", "SeaGreen3", "cyan", "blue",  "purple", "pink"]
-letters = ["A7", "B", "C", "D", "E", "F", "G", "A8"]
-
+# Dictionary mapping musical keys to arrays of letters
+key_to_letters = {
+    "C": ["C", "D", "E", "F", "G", "A", "B", "C8"],
+    "D": ["D", "E", "F#", "G", "A", "B", "C#", "D8"],
+    "G": ["G", "A", "B", "C", "D", "E", "F#", "G8"],
+    "A": ["A", "B", "C#", "D", "E", "F#", "G#", "A8"]
+}
 
 
 
@@ -264,57 +281,35 @@ exit_button.pack(side=tk.LEFT, padx=10)
 
 
 current_highlighted = None  # Track the currently highlighted box
-for i, (color, letter) in enumerate(zip(colors, letters)):
-    frame = tk.Frame(root, bg=color, width=width, height=height, highlightbackground="white", highlightthickness=1)
-    frame.grid(row=0, column=i, pady=(0, 20))  # Default padding
-    frame.pack_propagate(False)
-    label = tk.Label(frame, text=letter, bg=color)
-    label.pack(expand=True, fill='both')
-    boxes[letter] = frame
-    box_positions[letter] = 'normal'
+
     
-
-
 
 # Adjust window size
 window_width = width * len(colors)
 window_height = height + 300  # Extra space for buttons
 root.geometry(f"{window_width}x{window_height}")
+tk.Label(root, text="This is the main application window.").pack()
 
 
 
-# streams1 = resolve_stream("name='Unicorn'")
-# inlet = StreamInlet(streams1[0])
-# stream = streams.lsl_stream(inlet, buffer_length=1024)
+#%% COLLECT LSL STREAM
 
-# clb = lambda stream:  BCI_tools.band_power_calibrator(stream, ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 
-#                                                                'EEG 5', 'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
-#                                                         bands=['alpha_low','alpha_high'],
-#                                                         percentile=5, recording_length=10, epoch_len=1, inter_window_interval=0.25)
-
-
-# gen_tfrm = lambda buffer, clb_info: BCI_tools.band_power_transformer(buffer, clb_info, 
-#                                                                      ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 'EEG 5', 
-#                                                                       'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
-#                                                         bands=['alpha_low','alpha_high'],
-#                                                         epoch_len=1)
-
-
-# BCI = generic_BCI(clf, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
-# BCI.calibrate(stream)
-# BCI.run(stream)
 streams1 = resolve_stream("name='Unicorn'")
 inlet = StreamInlet(streams1[0])
 stream = streams.lsl_stream(inlet, buffer_length=1024)
 
+#%% INITIALIZE BCI
+
+
+
 clb = lambda stream:  BCI_tools.band_power_calibrator(stream, ['EEG 1', 'EEG 2', 'EEG 3', 'EEG 4', 
                                                                'EEG 5', 'EEG 6', 'EEG 7', 'EEG 8'], 'unicorn', 
                                                         bands=['alpha_low','alpha_high'],
-                                                        percentile=5, recording_length=5, epoch_len=1, inter_window_interval=0.25)
+                                                        percentile=5, recording_length=10, epoch_len=1, inter_window_interval=0.25)
 
 
 gen_tfrm = lambda buffer, clb_info: BCI_tools.band_power_transformer(buffer, 250, bands=['alpha_low','alpha_high'])
-BCI = generic_BCI(clf3, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
+BCI = generic_BCI(clf, transformer=gen_tfrm, action=generate_letter, calibrator=clb)
 
 def run_bci():
     BCI.calibrate(stream)
@@ -325,12 +320,7 @@ def run_bci():
 bci_thread = threading.Thread(target=run_bci, daemon=True)
 
 
+#%% RUN THE PROGRAM
 
-
-root.mainloop()
-
-
-
-
-
-
+# Start the event loop for the splash screen
+splash_root.mainloop()
