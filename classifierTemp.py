@@ -12,7 +12,7 @@ Attempting to make a classifier for single, double, and triple bandpowers.
 
 #%%
 
-clf_inputSingle = [2.17385452e+00, 2.17385452e+00, 2.17385452e+00, 2.17385452e+00,
+clf_inputSingle = [8, 2.17385452e+00, 2.17385452e+00, 2.17385452e+00,
              2.17385452e+00, 2.17385452e+00, 2.17385452e+00, 2.17385452e+00,
              5.31729604e-09, 5.01874084e-09, 9.04829068e-09, 1.40117325e-05,
              5.59281111e-06, 1.04068849e-05, 3.86462961e-08, 6.35869215e-03,
@@ -96,13 +96,19 @@ clb_infoDouble = [
 
 import numpy as np
 
+
+
 def clfSingle(clf_input, clb_info):
     # Convert inputs to numpy arrays
     clf_input_np = np.array(clf_input[:8])  # Only consider the first 8 elements
     clb_info_np = np.array(clb_info)[:, :7]  # Consider only the 7 percentiles
-
+    #print('clf_input_np:', clf_input_np)
+    #print('\n clb_info_np:',clb_info_np)
     # Compare clf_input_np with each percentile in clb_info_np and count how many percentiles it exceeds
-    bin_indices = np.sum(clf_input_np[:, np.newaxis] > clb_info_np, axis=1) + 1
+    bin_indices = np.sum(clf_input_np[:, np.newaxis] > clb_info_np, axis=0) 
+    #print('\nclf_input_np[:, np.newaxis] :', clf_input_np[:, np.newaxis] )
+    #print('\nclb_info_np', clb_info_np)
+
     
     note = round(np.average(bin_indices))
     
@@ -116,14 +122,54 @@ def clfDouble(clf_input, clb_info):
     clf2 = np.array(clf_input[1][:8])
     
     clb1 = np.array(clb_info)[:,0,:7]
-    clb2 = np.array(clb_info)[:,0,:7]
+    clb2 = np.array(clb_info)[:,1,:7]
     
-    bin_indices1 = np.sum(clf1[:, np.newaxis] > clb1, axis=1) + 1
-    bin_indices2 = np.sum(clf2[:, np.newaxis] > clb2, axis=1) + 1
+    bin_indices1 = np.sum(clf1[:, np.newaxis] > clb1, axis=0) 
+    bin_indices2 = np.sum(clf2[:, np.newaxis] > clb2, axis=0)
     
     note = round((np.average(bin_indices1) + np.average(bin_indices2))/2)
     
     return note
+
+
+def clfTriple(clf_input, clb_info):
+    
+    #convert into numpy arrays
+    clf1 = np.array(clf_input[0][:8])
+    clf2 = np.array(clf_input[1][:8])
+    clf3 = np.array(clf_input[2][:8])
+    
+    clb1 = np.array(clb_info)[:,0,:7]
+    clb2 = np.array(clb_info)[:,1,:7]
+    clb3 = np.array(clb_info)[:,2,:7]
+    
+    bin_indices1 = np.sum(clf1[:, np.newaxis] > clb1, axis=0) 
+    bin_indices2 = np.sum(clf2[:, np.newaxis] > clb2, axis=0)
+    bin_indices3 = np.sum(clf3[:, np.newaxis] > clb3, axis=0)
+    
+    note = round((np.average(bin_indices1) + np.average(bin_indices2) + np.average(bin_indices3) )/3)
+    
+    return note
+
+
+def clfElectrode(clf_input, clb_info, electrode):
+    
+    n = electrode - 1
+    # Convert inputs to numpy arrays
+    clf_input_np = np.array(clf_input[n])  # Only consider the chosen electrode 
+    clb_info_np = np.array(clb_info)[:7, n]  # Consider only the 7 percentiles
+    
+    print('clf_input_np:', clf_input_np)
+    print('\n clb_info_np:',clb_info_np)
+    
+
+    bin_indices = np.sum(clf_input_np[np.newaxis] > clb_info_np, axis=0) 
+
+    note = round(np.average(bin_indices))
+    
+    return note
+
+
 
 #%%
 
@@ -134,7 +180,7 @@ Lets define multiple different ways to generate a note
     3. Possibly average notes over 1 second
 '''
 
-def generaeNote(note):
+def generateNote(note):
     if all(position == 'normal' for position in box_positions.values()):
         letters = list(boxes.keys())
         selected_letter = letters[note]
@@ -146,7 +192,9 @@ def generaeNote(note):
 
 print(clfSingle(clf_inputSingle, clb_infoSingle), '\n')
 
-print(clfDouble(clf_inputDouble, clb_infoDouble))
+print(clfDouble(clf_inputDouble, clb_infoDouble), '\n')
+
+print(clfElectrode(clf_inputSingle, clb_infoSingle, 1))
 
 
 
