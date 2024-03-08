@@ -131,7 +131,7 @@ class generic_BCI:
 
         # TODO: implement ending condition?
         running = True  # currently constantly running.
-
+        time.sleep(1)
         while running:
             # if new data available, run _update on it
             if stream.update_buffer():

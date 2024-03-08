@@ -24,6 +24,7 @@ def get_channels(signal, channels, device=None):
 
     # check device; each device has its own ch_ind dictionary corresponding to
     # its available channels
+    '''
     if isinstance(channels[0], str):
         if device == 'muse':
             ch_ind_muse = {'TP9': 0, 'AF7': 1, 'AF8': 2, 'TP10': 3}
@@ -44,7 +45,8 @@ def get_channels(signal, channels, device=None):
 
     else:
         raise ValueError('Invalid channel type. Must be str name or int index.')
-
+    '''
+    return_signal = np.array(signal)
     return return_signal
 
 

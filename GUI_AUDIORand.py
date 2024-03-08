@@ -5,7 +5,7 @@ Created on Wed Feb 14 14:35:15 2024
 
 @author: jackfaller
 """
-
+#%% Audio and Function Definitions
 import tkinter as tk
 from tkinter import ttk  # For the ComboBox
 import random
@@ -215,7 +215,7 @@ def start_bci_and_calibration():
 #%% CLAUDE 3
 
 # Box dimensions
-width = 100
+width = 150
 height = 100
 
 colors = ["red", "orange","green", "SeaGreen3", "cyan", "blue",  "purple", "pink"]
@@ -306,3 +306,5 @@ start_button_splash = tk.Button(splash_root, text="Start", command=on_start)
 start_button_splash.pack(pady=20)
 
 splash_root.mainloop()
+
+# %%
