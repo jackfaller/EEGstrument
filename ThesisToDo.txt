@@ -10,6 +10,7 @@ Created on Tue Mar  5 12:55:47 2024
 
 
 To Do:
+    -Continious note playing
     - Add option to switch the keys
     - Add all necessary wav files
     - slow down processes to make more efficient
@@ -42,5 +43,6 @@ Meeting 3/9:
             - Chord Option
         - Previous experiment's testing procedure (use or no)
         - Hackathon
+        - Ask ethan for access to tutorial
         
-        
+Send hackathon to QMind saying the lab is open         
