@@ -146,7 +146,7 @@ def band_power_calibrator(stream, channels, device, bands, percentile=50,
     # calculate inter_window_interval in # of samples
     iwi = int(inter_window_interval * sampling_rate)
 
-    #input('Open and close your left hand every second for 20 seconds.\nPress Enter to begin calibration...')
+    #input('test changeOpen and close your left hand every second for 20 seconds.\nPress Enter to begin calibration...')
     print(f'Recording for {recording_length} seconds...')
 
     # sleep for recording_length while stream accumulates data
