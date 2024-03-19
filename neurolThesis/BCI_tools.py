@@ -140,7 +140,7 @@ def band_power_calibrator(stream, channels, device, bands, percentile=50,
         clb_info: array of shape [n_bands, n_channels] of the `percentile`
         of the power of each band
     '''
-    sampling_rate = DEVICE_SAMPLING_RATE[device]  # get sampling_rate
+    sampling_rate = 250  # get sampling_rate
     # calculate window size in # of samples
     ws = int(epoch_len * sampling_rate)
     # calculate inter_window_interval in # of samples
