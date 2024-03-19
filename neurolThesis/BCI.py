@@ -134,8 +134,6 @@ class generic_BCI:
         time.sleep(1)
         while running:
             # if new data available, run _update on it
-            time.sleep(0.3)
-            print('sleep')
             if stream.update_buffer():
                 self._update(stream.buffer)
 
